@@ -1,18 +1,27 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, MessageEvent } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { IProduct } from '../types';
 import { uuidv4 } from '../utils';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class ProductsService {
   private readonly products: Map<string, IProduct> = new Map();
+  private readonly productEvent$ = new Subject<MessageEvent>();
 
   create(createProductDto: CreateProductDto): IProduct {
     const id = uuidv4();
     const product: IProduct = { id, ...createProductDto };
 
     this.products.set(id, product);
+
+    this.productEvent$.next({
+      data: JSON.stringify(product),
+      type: 'product-created',
+      id,
+      retry: 0,
+    });
 
     return product;
   }
@@ -38,6 +47,13 @@ export class ProductsService {
 
     this.products.set(id, updatedProduct);
 
+    this.productEvent$.next({
+      data: JSON.stringify(updatedProduct),
+      type: 'product-updated',
+      id,
+      retry: 0,
+    });
+
     return updatedProduct;
   }
 
@@ -46,6 +62,17 @@ export class ProductsService {
 
     this.products.delete(id);
 
+    this.productEvent$.next({
+      data: JSON.stringify(product),
+      type: 'product-deleted',
+      id,
+      retry: 0,
+    });
+
     return product;
+  }
+
+  getProductEvent(): Observable<MessageEvent> {
+    return this.productEvent$.asObservable();
   }
 }
