@@ -1,3 +1,9 @@
+import type { Socket } from 'socket.io';
+
+export interface CustomSocket extends Socket {
+  username: string;
+}
+
 export interface IProduct {
   id: string;
   name: string;

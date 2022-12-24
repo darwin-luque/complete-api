@@ -5,6 +5,7 @@ import * as path from 'path';
 import { ProductsModule } from './products/products.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AppService } from './app.service';
         },
       }),
     }),
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],
