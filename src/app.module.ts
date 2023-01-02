@@ -6,6 +6,7 @@ import { ProductsModule } from './products/products.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ChatModule } from './chat/chat.module';
+import { MapperModule } from './mapper/mapper.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ChatModule } from './chat/chat.module';
       }),
     }),
     ChatModule,
+    MapperModule,
   ],
   controllers: [AppController],
   providers: [AppService],
