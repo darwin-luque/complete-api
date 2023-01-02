@@ -7,7 +7,6 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { ChatService } from './chat.service';
 import { Server } from 'socket.io';
 import { CustomSocket } from '../types';
 
@@ -15,8 +14,6 @@ import { CustomSocket } from '../types';
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
-
-  constructor(private readonly chatService: ChatService) {}
 
   handleDisconnect(client: CustomSocket) {
     client.broadcast.emit('user disconnected', client.id);
