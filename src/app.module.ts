@@ -7,6 +7,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ChatModule } from './chat/chat.module';
 import { MapperModule } from './mapper/mapper.module';
+import { USE_RAW_WS } from './constants';
+
+const WsModule = USE_RAW_WS ? MapperModule : ChatModule;
 
 @Module({
   imports: [
@@ -25,8 +28,7 @@ import { MapperModule } from './mapper/mapper.module';
         },
       }),
     }),
-    ChatModule,
-    MapperModule,
+    WsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
