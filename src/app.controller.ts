@@ -9,7 +9,7 @@ import {
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 import { getType } from 'mime';
@@ -25,9 +25,22 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Post('upload')
+  @Post('upload/single')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadSingleFile(@UploadedFiles() file: Express.Multer.File) {
+    return {
+      originalname: file.originalname,
+      mimetype: file.mimetype,
+      destination: file.destination,
+      filename: file.filename,
+      path: file.path,
+      size: file.size,
+    };
+  }
+
+  @Post('upload/multiple')
   @UseInterceptors(FilesInterceptor('files'))
-  uploadFile(@UploadedFiles() files: Array<Express.Multer.File>) {
+  uploadMultipleFile(@UploadedFiles() files: Array<Express.Multer.File>) {
     return files.map((file) => ({
       originalname: file.originalname,
       mimetype: file.mimetype,
