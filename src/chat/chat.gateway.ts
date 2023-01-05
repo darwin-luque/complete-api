@@ -10,8 +10,10 @@ import {
 import { Server } from 'socket.io';
 import { CustomSocket } from '../types';
 
-@WebSocketGateway({ namespace: 'chat' })
+@WebSocketGateway()
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  private users: { userId: string; username: string }[] = [];
+
   @WebSocketServer()
   server: Server;
 
@@ -20,16 +22,12 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleConnection(client: CustomSocket) {
-    const users = [];
+    client.emit('users', this.users);
 
-    for (const [id, socket] of this.server.of('/chat').sockets) {
-      users.push({
-        userId: id,
-        username: (socket as CustomSocket).username,
-      });
-    }
-
-    client.emit('users', users);
+    this.users.push({
+      userId: client.id,
+      username: client.username,
+    });
 
     client.broadcast.emit('user connected', {
       userId: client.id,
