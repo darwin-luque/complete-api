@@ -1,6 +1,7 @@
 import {
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
   IsUrl,
   Min,
@@ -21,5 +22,6 @@ export class CreateProductDto {
   description: string;
 
   @IsUrl()
+  @IsOptional()
   image?: string;
 }
