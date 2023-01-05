@@ -6,6 +6,7 @@ import {
   Post,
   Res,
   StreamableFile,
+  UploadedFile,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -27,7 +28,7 @@ export class AppController {
 
   @Post('upload/single')
   @UseInterceptors(FileInterceptor('file'))
-  uploadSingleFile(@UploadedFiles() file: Express.Multer.File) {
+  uploadSingleFile(@UploadedFile() file: Express.Multer.File) {
     return {
       originalname: file.originalname,
       mimetype: file.mimetype,
