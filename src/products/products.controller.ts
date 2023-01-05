@@ -18,6 +18,11 @@ import { Observable } from 'rxjs';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+  @Sse('mutation')
+  mutation(): Observable<MessageEvent> {
+    return this.productsService.getProductEvent();
+  }
+
   @Post()
   create(@Body() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
@@ -41,10 +46,5 @@ export class ProductsController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.productsService.remove(id);
-  }
-
-  @Sse('mutation')
-  mutation(): Observable<MessageEvent> {
-    return this.productsService.getProductEvent();
   }
 }
